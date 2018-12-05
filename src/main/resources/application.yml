@@ -1,0 +1,15 @@
+logging:
+    level:
+        com.tamc.oauth.controller: DEBUG
+
+spring:
+    application:
+        name: tamc-cloud-oauth
+    profiles:
+      active: dev
+
+server:
+    port: 8089
+
+
+

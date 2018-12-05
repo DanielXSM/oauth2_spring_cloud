@@ -1,0 +1,69 @@
+server:
+  port: 8016
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://54.222.177.176:3306/tamc_message_dev?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false
+    username: tamc
+    password: Tamc@2018!
+  redis:
+    database: 0
+    host: ec2-54-223-175-128.cn-north-1.compute.amazonaws.com.cn
+    port: 6379
+    password: Qws23Ws2
+    timeout: 10000
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database: MYSQL
+    openInView: true
+    show_sql: true
+    generate-ddl: true #(false)
+    hibernate:
+        ddl-auto: update #(none)
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    lease-expiration-duration-in-seconds: 20   #服务过期时间配置,超过这个时间没有接收到心跳EurekaServer就会将这个实例剔除(默认90秒)
+    lease-renewal-interval-in-seconds: 5       #服务刷新时间配置，每隔这个时间会主动心跳一次(默认30秒)
+  client:
+    fetchRegistry: true
+    registry-fetch-interval-seconds: 10  #重新刷新服务地址的时间
+    service-url:
+#      defaultZone: http://172.31.15.159:8761/eureka
+                defaultZone: http://52.81.0.21:8761/eureka
+#      ,http://52.80.196.53:8761/eureka
+#      defaultZone: http://127.0.0.1:8761/eureka
+
+feign:
+  hystrix:
+    enabled: true
+
+ribbon:
+  ConnectTimeout: 200          #创建连接的超时时间 毫秒
+  ReadTimeout: 40000            #处理请求的超时时间 毫秒
+  MaxAutoRetries: 0            #对当前实例的重试次数
+  MaxAutoRetriesNextServer: 0  #切换实例的重试次数
+
+hystrix:
+  threadpool:
+    default:
+      coreSize: 100 #缺省为10
+  command:
+    default:
+      execution:
+        isolation:
+          semaphore:
+            maxConcurrentRequests: 500
+          thread:
+            timeoutInMilliseconds: 3000   #hystrix线程超过多少毫秒熔断，数值大于ribbon的处理超时时间，留给ribbon重试，否则直接熔断，重试就没有意义了
+
+
+
+
+#log:
+#  path: /app/service-api-logs  #D:\service-api-logs
+#  level: info
